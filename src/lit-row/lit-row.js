@@ -1,10 +1,10 @@
-import { LitElement, html, createStaticStyle } from '../lit-element/lit-element.js';
+import { LitElement, html } from '../lit-element/lit-element.js';
 import '../lit-cell/lit-cell.js';
 
-const hostClass = createStaticStyle({
+const hostStyle = {
   display: 'block',
   overflow: 'hidden',
-});
+};
 
 const whiteOrBlackClass = (row, col) => (row + col) % 2 ? 'black' : 'white';
 
@@ -17,9 +17,9 @@ export class LitRow extends LitElement {
     };
   }
 
-  _renderHost() {
+  _renderHost({ at }) {
     return {
-      class: hostClass,
+      ...at(hostStyle),
     };
   }
 

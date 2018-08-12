@@ -1,12 +1,12 @@
-import { LitElement, html, createStaticStyle } from '../lit-element/lit-element.js';
+import { LitElement, html } from '../lit-element/lit-element.js';
 import '../lit-row/lit-row.js';
 
-const hostClass = createStaticStyle({
+const hostStyle = {
   display: 'inline-block',
   borderWidth: '1px',
   borderStyle: 'solid',
   borderColor: 'black',
-});
+};
 
 export class LitTable extends LitElement {
   static get properties() {
@@ -16,9 +16,9 @@ export class LitTable extends LitElement {
     };
   }
 
-  _renderHost() {
+  _renderHost({ at }) {
     return {
-      class: hostClass,
+      ...at(hostStyle),
     };
   }
 

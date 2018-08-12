@@ -1,12 +1,12 @@
-import { LitElement, html, createStaticStyle } from '../lit-element/lit-element.js';
+import { LitElement, html } from '../lit-element/lit-element.js';
 
-const hostClass = createStaticStyle({
+const hostStyle = {
   display: 'block',
-});
+};
 
-const inputClass = createStaticStyle({
+const inputStyle = {
   width: '50px',
-});
+};
 
 export class LitForm extends LitElement {
   static get properties() {
@@ -16,21 +16,22 @@ export class LitForm extends LitElement {
     };
   }
 
-  _renderHost() {
+  _renderHost({ at }) {
     return {
-      class: hostClass,
+      ...at(hostStyle),
     };
   }
 
-  _render({ rows, cols }) {
+  _render({ rows, cols, cl }) {
+    const inputClass = cl(inputStyle);
     return html`
       <label>
         Rows:
-        <input class$="${inputClass}" type="number" value="${rows}" on-input="${this.__onRowsInput.bind(this)}">
+        <input class$="${inputClass}" type="number" value$="${rows}" on-input="${this.__onRowsInput.bind(this)}">
       </label>
       <label>
         Cols:
-        <input class$="${inputClass}" type="number" value="${cols}" on-input="${this.__onColsInput.bind(this)}">
+        <input class$="${inputClass}" type="number" value$="${cols}" on-input="${this.__onColsInput.bind(this)}">
       </label>
     `;
   }

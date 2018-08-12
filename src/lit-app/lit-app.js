@@ -1,10 +1,16 @@
-import { LitElement, html, createStaticStyle } from '../lit-element/lit-element.js';
+import { LitElement, html } from '../lit-element/lit-element.js';
 import '../lit-form/lit-form.js';
 import '../lit-table/lit-table.js';
 
-const hostClass = createStaticStyle({
+const hostStyle = {
   display: 'block',
-});
+};
+
+const formStyle = {
+  position: 'fixed',
+  top: 0,
+  right: 0,
+}
 
 export class LitApp extends LitElement {
   static get properties() {
@@ -20,15 +26,16 @@ export class LitApp extends LitElement {
     this.cols = 8;
   }
 
-  _renderHost() {
+  _renderHost({ at }) {
     return {
-      class: hostClass,
+      ...at(hostStyle),
     };
   }
 
-  _render({ rows, cols }) {
+  _render({ rows, cols, cl }) {
     return html`
       <lit-form
+        class$="${cl(formStyle)}"
         rows="${rows}"
         cols="${cols}"
         on-rows-changed="${this.__onRowsChanged.bind(this)}"

@@ -1,24 +1,21 @@
-import { LitElement, html, createStaticStyle, createDynamicStyle } from '../lit-element/lit-element.js';
+import { LitElement, html } from '../lit-element/lit-element.js';
 
-const hostStaticClass = createStaticStyle({
-  display: 'inline-block',
-  fontSize: '18px',
-  '&.black': {
-    backgroundColor: 'black',
-  },
-  '&.white': {
-    backgroundColor: 'lightgrey',
-  },
-});
-
-const hostDynamicClass = createDynamicStyle((props) => {
+const hostStyle = (props) => {
   const max = Math.max(props.cols, props.rows);
   const size = max <= 20 ? '4vw' : `${80/max}vw`;
   return {
     width: size,
     height: size,
-  }
-});
+    display: 'inline-block',
+    fontSize: '18px',
+    '&.black': {
+      backgroundColor: 'black',
+    },
+    '&.white': {
+      backgroundColor: 'lightgrey',
+    },
+  };
+};
 
 export class LitCell extends LitElement {
   static get properties() {
@@ -30,9 +27,9 @@ export class LitCell extends LitElement {
     };
   }
 
-  _renderHost(props) {
+  _renderHost({ at }) {
     return {
-      class: `${hostStaticClass} ${hostDynamicClass(props)}`,
+      ...at(hostStyle),
     };
   }
 

@@ -1,6 +1,6 @@
-import { LitElement, html } from '../lit-element/lit-element.js';
-import '../lit-form/lit-form.js';
-import '../lit-table/lit-table.js';
+import { RefElement, html } from './ref-element.js';
+import './ref-form.js';
+import './ref-table.js';
 
 const hostStyle = {
   display: 'block',
@@ -12,7 +12,7 @@ const formStyle = {
   right: 0,
 }
 
-export class LitApp extends LitElement {
+export class RefApp extends RefElement {
   static get properties() {
     return {
       rows: Number,
@@ -34,18 +34,18 @@ export class LitApp extends LitElement {
 
   _render({ rows, cols, cl }) {
     return html`
-      <lit-form
+      <ref-form
         class$="${cl(formStyle)}"
         rows="${rows}"
         cols="${cols}"
         on-rows-changed="${this.__onRowsChanged.bind(this)}"
         on-cols-changed="${this.__onColsChanged.bind(this)}"
-      ></lit-form>
+      ></ref-form>
       <div>
-        <lit-table
+        <ref-table
           rows="${rows}"
           cols="${cols}"
-        ></lit-table>
+        ></ref-table>
       </div>
     `;
   }
@@ -59,4 +59,4 @@ export class LitApp extends LitElement {
   }
 }
 
-customElements.define('lit-app', LitApp);
+customElements.define('ref-app', RefApp);

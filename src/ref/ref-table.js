@@ -1,5 +1,5 @@
-import { LitElement, html } from '../lit-element/lit-element.js';
-import '../lit-row/lit-row.js';
+import { RefElement, html } from './ref-element.js';
+import './ref-row.js';
 
 const hostStyle = {
   display: 'inline-block',
@@ -8,7 +8,7 @@ const hostStyle = {
   borderColor: 'black',
 };
 
-export class LitTable extends LitElement {
+export class RefTable extends RefElement {
   static get properties() {
     return {
       rows: Number,
@@ -25,10 +25,10 @@ export class LitTable extends LitElement {
   _render({ rows, cols }) {
     return html`
       ${Array.from({ length: rows }).map((_, i) => {
-        return html`<lit-row rows="${rows}" cols="${cols}" row="${i}"></lit-row>`;
+        return html`<ref-row rows="${rows}" cols="${cols}" row="${i}"></ref-row>`;
       })}
     `;
   }
 }
 
-customElements.define('lit-table', LitTable);
+customElements.define('ref-table', RefTable);

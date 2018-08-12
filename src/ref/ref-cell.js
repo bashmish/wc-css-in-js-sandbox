@@ -1,4 +1,4 @@
-import { LitElement, html } from '../lit-element/lit-element.js';
+import { RefElement, html } from './ref-element.js';
 
 const hostStyle = (props) => {
   const max = Math.max(props.cols, props.rows);
@@ -17,7 +17,7 @@ const hostStyle = (props) => {
   };
 };
 
-export class LitCell extends LitElement {
+export class RefCell extends RefElement {
   static get properties() {
     return {
       rows: Number,
@@ -38,4 +38,4 @@ export class LitCell extends LitElement {
   }
 }
 
-customElements.define('lit-cell', LitCell);
+customElements.define('ref-cell', RefCell);

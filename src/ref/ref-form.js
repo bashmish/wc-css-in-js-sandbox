@@ -1,4 +1,4 @@
-import { LitElement, html } from '../lit-element/lit-element.js';
+import { RefElement, html } from './ref-element.js';
 
 const hostStyle = {
   display: 'block',
@@ -8,7 +8,7 @@ const inputStyle = {
   width: '50px',
 };
 
-export class LitForm extends LitElement {
+export class RefForm extends RefElement {
   static get properties() {
     return {
       rows: Number,
@@ -49,4 +49,4 @@ export class LitForm extends LitElement {
   }
 }
 
-customElements.define('lit-form', LitForm);
+customElements.define('ref-form', RefForm);

@@ -1,11 +1,11 @@
-import { LitElement as OriginalLitElement } from '@polymer/lit-element';
+import { LitElement } from '@polymer/lit-element';
 import { createRenderer, renderToDOM } from '../../vendor/fela.js';
 
 export { html } from 'lit-html/lib/lit-extended.js';
 
 // TODO: disable window.ShadyCSS for all browsers
 
-export class LitElement extends OriginalLitElement {
+export class RefElement extends LitElement {
   constructor() {
     super();
     this.__litElementShadowRoot = this.attachShadow({ mode: 'open' });

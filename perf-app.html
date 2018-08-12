@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <title>app</title>
+  <style>
+    body {
+      margin: 0;
+    }
+  </style>
+  <script type="module">
+    import '@babel/polyfill/dist/polyfill.js';
+    import 'url-polyfill/url-polyfill.js';
+    import '@webcomponents/webcomponentsjs/webcomponents-loader.js';
+    import 'perf-tester/perf.js';
+    const urlParsed = new URL(window.location.href);
+    const getParamName = urlParsed.searchParams.get('name');
+    const getParamSize = urlParsed.searchParams.get('size');
+    const appName = getParamName || 'ref';
+    const appSize = getParamSize || 8;
+    document.title = `${appName}-app`;
+    import(`./src/${appName}/${appName}-app.js`).then(() => {
+      console.perf();
+      document.body.innerHTML = `<${appName}-app cols="${appSize}" rows="${appSize}"></${appName}-app>`;
+      setTimeout(() => {
+        console.perfEnd();
+      }, 0);
+    });
+  </script>
+</head>
+<body>
+</body>
+</html>

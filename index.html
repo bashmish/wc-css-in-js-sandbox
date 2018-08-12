@@ -3,18 +3,21 @@
 <head>
   <meta charset="utf-8">
   <title>web-components-playground</title>
-  <style>
-    body {
-      margin: 0;
-    }
-  </style>
-  <script type="module">
-    import '@babel/polyfill/dist/polyfill.js';
-    import '@webcomponents/webcomponentsjs/webcomponents-loader.js';
-    import './src/ref/ref-app.js';
-  </script>
+  <script src="./node_modules/@babel/polyfill/dist/polyfill.js"></script>
+  <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="./node_modules/perf-tester/perf-tester.js"></script>
 </head>
 <body>
-  <ref-app></ref-app>
+  <perf-tester></perf-tester>
+  <script type="module">
+    customElements.whenDefined('perf-tester').then(() => {
+      document.querySelector('perf-tester').tests = [
+        './perf-app.html?name=ref&size=5',
+        './perf-app.html?name=lit&size=5',
+        './perf-app.html?name=ref&size=20',
+        './perf-app.html?name=lit&size=20',
+      ];
+    });
+  </script>
 </body>
 </html>

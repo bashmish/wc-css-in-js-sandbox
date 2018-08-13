@@ -17,6 +17,7 @@
     "rollup-plugin-commonjs": "^9.1.5",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-uglify-es": "0.0.1",
     "url-polyfill": "^1.0.14"
   },
   "scripts": {

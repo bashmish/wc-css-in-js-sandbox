@@ -6,6 +6,7 @@
   "dependencies": {
     "@polymer/lit-element": "^0.5.2",
     "@webcomponents/webcomponentsjs": "^2.0.4",
+    "deepmerge": "^2.1.1",
     "lit-html": "^0.10.2"
   },
   "devDependencies": {

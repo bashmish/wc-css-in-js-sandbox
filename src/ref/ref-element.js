@@ -1,5 +1,6 @@
 import { LitElement } from '@polymer/lit-element';
-import { createRenderer, renderToDOM } from '../../vendor/fela.js';
+import { createRenderer, renderToDOM, combineRules } from '../../vendor/fela.js';
+import deepMerge from 'deepmerge';
 
 export { html } from 'lit-html/lib/lit-extended.js';
 
@@ -16,7 +17,8 @@ export class RefElement extends LitElement {
   }
 
   _propertiesChanged(props, changedProps, prevProps) {
-    const newProps = { ...props, cl: this._renderClass.bind(this) }
+    const newProps = { ...props, cl: this._renderClass.bind(this) };
+    this.__currentProps = newProps;
     super._propertiesChanged(newProps, changedProps, prevProps);
   }
 
@@ -29,27 +31,44 @@ export class RefElement extends LitElement {
   }
 
   /**
+   * Merges style mixins with their parent class values in the right order and updates the props object.
+   * @param {Object} props
+   * @param {Object} mixins
+   */
+  _mixStyle(props, mixins) {
+    Object.keys(mixins).forEach((key) => {
+      const currentRule = props[key];
+      const overriddenRule = mixins[key];
+      const objOrFuncs = [currentRule, overriddenRule].filter(Boolean);
+      const funcs = this.__transformObjOrFuncsToOnlyFuncs(objOrFuncs);
+      const objects = funcs.map(f => f(props));
+      const mixed = deepMerge.all(objects);
+      props[key] = mixed;
+    });
+  }
+
+  /**
    * Renders class selector for provided styles for this custom element children.
-   * @param objOrFunc styles object or function returning styles object
+   * @param {Array<function|Object>} objOrFuncs styles object or function returning styles object
    * @returns {string} space separated class names
    */
-  _renderClass(objOrFunc) {
+  _renderClass(...objOrFuncs) {
     // TODO: cache for same static object input
     this.__ensureRenderer(this.__getChildShadowParent());
-    return this.__getFelaClass(this.__getChildShadowParent(), objOrFunc);
+    return this.__getFelaClass(this.__getChildShadowParent(), this.__currentProps, ...objOrFuncs);
   }
 
   /**
    * Renders class for provided styles for this custom element host.
-   * @param objOrFunc styles object or function returning styles object
+   * @param {Array<function|Object>} objOrFuncs styles object or function returning styles object
    * @returns {string} space separated class names
    */
-  _renderHostClass(objOrFunc) {
+  _renderHostClass(...objOrFuncs) {
     // TODO: cache for same static object input
     this.__ensureRenderer(this.__getHostShadowParent());
     const renderer = this.__getHostShadowParent().__felaRenderer;
 
-    const klass = this.__getFelaClass(this.__getHostShadowParent(), objOrFunc);
+    const klass = this.__getFelaClass(this.__getHostShadowParent(), this.__currentHostProps, ...objOrFuncs);
     const classes = this.__getClasses(klass);
 
     // hack to make styleNode.sheet available
@@ -182,17 +201,16 @@ export class RefElement extends LitElement {
     }
   }
 
-  __getFelaClass(root, objOrFunc) {
-    if (typeof objOrFunc === 'function') {
-      return root.__felaRenderer.renderRule(objOrFunc, this);
-    } else {
-      return root.__felaRenderer.renderRule(() => objOrFunc);
-    }
+  __getFelaClass(root, props, ...objOrFuncs) {
+    const funcs = this.__transformObjOrFuncsToOnlyFuncs(objOrFuncs);
+    const fullRule = combineRules(...funcs);
+    return root.__felaRenderer.renderRule(fullRule, props);
   }
 
   __applyRenderHost(props) {
     if (!this._renderHost) { return; }
     const extProps = { ...props, cl: this._renderHostClass.bind(this) };
+    this.__currentHostProps = extProps;
     const hostConfig = this._renderHost(extProps);
     this.__applyHostConfig(hostConfig);
   }
@@ -246,5 +264,11 @@ export class RefElement extends LitElement {
 
   __getClasses(classString) {
     return classString.split(' ').filter(Boolean);
+  }
+
+  __transformObjOrFuncsToOnlyFuncs(objOrFuncs) {
+    return objOrFuncs.map((objOrFunc) => {
+      return typeof objOrFunc === 'function' ? objOrFunc : () => objOrFunc;
+    });
   }
 }

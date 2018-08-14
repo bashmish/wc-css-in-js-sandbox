@@ -3,9 +3,6 @@ import './ref-row.js';
 
 const hostStyle = {
   display: 'inline-block',
-  borderWidth: '1px',
-  borderStyle: 'solid',
-  borderColor: 'black',
 };
 
 export class RefTable extends RefElement {

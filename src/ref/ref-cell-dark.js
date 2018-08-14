@@ -1,15 +1,26 @@
-import { RefCell } from './ref-cell.js';
+import { RefCellHighlighted } from './ref-cell-highlighted.js';
 
-const hostStyle = {
+const hostStyleMixin = {
   backgroundColor: 'darkgrey',
 };
 
-export class RefCellDark extends RefCell {
-  _renderHost({ cl }) {
-    const superHost = super._renderHost(...arguments);
-    return {
-      class: `${cl(hostStyle)} ${superHost.class}`,
-    };
+const textStyleMixin = {
+  color: 'white',
+  textAlign: 'left',
+  ':hover': {
+    textAlign: 'right',
+  },
+};
+
+export class RefCellDark extends RefCellHighlighted {
+  _renderHost(props) {
+    this._mixStyle(props, { hostStyleMixin });
+    return super._renderHost(...arguments);
+  }
+
+  _render(props) {
+    this._mixStyle(props, { textStyleMixin });
+    return super._render(...arguments);
   }
 }
 

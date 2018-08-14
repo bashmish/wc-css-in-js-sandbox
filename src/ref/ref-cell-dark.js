@@ -13,9 +13,9 @@ const textStyleMixin = {
 };
 
 export class RefCellDark extends RefCellHighlighted {
-  _renderHost(props) {
+  _renderHostAttributes(props) {
     this._mixStyle(props, { hostStyleMixin });
-    return super._renderHost(...arguments);
+    return super._renderHostAttributes(...arguments);
   }
 
   _render(props) {

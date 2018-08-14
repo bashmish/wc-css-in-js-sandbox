@@ -47,7 +47,7 @@ export class RefCell extends RefElement {
     };
   }
 
-  _renderHost({ cl }) {
+  _renderHostAttributes({ cl }) {
     return {
       class: cl(hostStyle),
     };

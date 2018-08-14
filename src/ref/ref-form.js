@@ -16,7 +16,7 @@ export class RefForm extends RefElement {
     };
   }
 
-  _renderHost({ cl }) {
+  _renderHostAttributes({ cl }) {
     return {
       class: cl(hostStyle),
     };

@@ -63,7 +63,7 @@ export class RefElement extends LitElement {
    * @param {Array<function|Object>} objOrFuncs styles object or function returning styles object
    * @returns {string} space separated class names
    */
-  _renderHostClass(...objOrFuncs) {
+  _renderHostAttributesClass(...objOrFuncs) {
     // TODO: cache for same static object input
     this.__ensureRenderer(this.__getHostShadowParent());
     const renderer = this.__getHostShadowParent().__felaRenderer;
@@ -208,10 +208,10 @@ export class RefElement extends LitElement {
   }
 
   __applyRenderHost(props) {
-    if (!this._renderHost) { return; }
-    const extProps = { ...props, cl: this._renderHostClass.bind(this) };
+    if (!this._renderHostAttributes) { return; }
+    const extProps = { ...props, cl: this._renderHostAttributesClass.bind(this) };
     this.__currentHostProps = extProps;
-    const hostConfig = this._renderHost(extProps);
+    const hostConfig = this._renderHostAttributes(extProps);
     this.__applyHostConfig(hostConfig);
   }
 

@@ -1,12 +1,11 @@
 import { RefElement, html } from './ref-element.js';
-import './ref-cell.js';
+import './ref-cell-dark.js';
+import './ref-cell-light.js';
 
 const hostStyle = {
   display: 'block',
   overflow: 'hidden',
 };
-
-const whiteOrBlackClass = (row, col) => (row + col) % 2 ? 'black' : 'white';
 
 export class RefRow extends RefElement {
   static get properties() {
@@ -25,13 +24,13 @@ export class RefRow extends RefElement {
 
   _render({ rows, cols, row }) {
     return html`
-      ${Array.from({ length: cols }).map((_, i) => html`<ref-cell
-        rows="${rows}"
-        cols="${cols}"
-        row="${row}"
-        col="${i}"
-        class$="${whiteOrBlackClass(row, i)}"
-      ></ref-cell>`)}
+      ${Array.from({ length: cols }).map((_, col) => {
+        if ((row + col) % 2) {
+          return html`<ref-cell-dark rows="${rows}" cols="${cols}" row="${row}" col="${col}"></ref-cell-dark>`;
+        } else {
+          return html`<ref-cell-light rows="${rows}" cols="${cols}" row="${row}" col="${col}"></ref-cell-light>`;
+        }
+      })}
     `;
   }
 }

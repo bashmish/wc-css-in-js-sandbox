@@ -1,8 +1,7 @@
 import { LitElement } from '@polymer/lit-element';
 import { html } from 'lit-html/lib/lit-extended.js';
-import './lit-cell.js';
-
-const whiteOrBlackClass = (row, col) => (row + col) % 2 ? 'black' : 'white';
+import './lit-cell-dark.js';
+import './lit-cell-light.js';
 
 export class LitRow extends LitElement {
   static get properties() {
@@ -21,13 +20,13 @@ export class LitRow extends LitElement {
           overflow: hidden;
         }
       </style>
-      ${Array.from({ length: cols }).map((_, i) => html`<lit-cell
-        rows="${rows}"
-        cols="${cols}"
-        row="${row}"
-        col="${i}"
-        class$="${whiteOrBlackClass(row, i)}"
-      ></lit-cell>`)}
+      ${Array.from({ length: cols }).map((_, col) => {
+        if ((row + col) % 2) {
+          return html`<lit-cell-dark rows="${rows}" cols="${cols}" row="${row}" col="${col}"></lit-cell-dark>`;
+        } else {
+          return html`<lit-cell-light rows="${rows}" cols="${cols}" row="${row}" col="${col}"></lit-cell-light>`;
+        }
+      })}
     `;
   }
 }

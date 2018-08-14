@@ -11,6 +11,15 @@ export class LitCell extends LitElement {
     };
   }
 
+  _renderStyle() {
+    return `
+      :host {
+        display: inline-block;
+        font-size: 18px;
+      }
+    `;
+  }
+
   _render({ rows, cols, row, col }) {
     const max = Math.max(rows, cols);
     const size = max <= 20 ? '4vw' : `${80/max}vw`;
@@ -18,18 +27,7 @@ export class LitCell extends LitElement {
     this.style.height = size;
     return html`
       <style>
-        :host {
-          display: inline-block;
-          font-size: 18px;
-        }
-
-        :host(.black) {
-          background-color: black;
-        }
-
-        :host(.white) {
-          background-color: lightgrey;
-        }
+        ${this._renderStyle()}
       </style>
       ${row+1}:${col+1}
     `;

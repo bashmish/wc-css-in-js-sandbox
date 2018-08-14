@@ -8,12 +8,6 @@ const hostStyle = (props) => {
     height: size,
     display: 'inline-block',
     fontSize: '18px',
-    '&.black': {
-      backgroundColor: 'black',
-    },
-    '&.white': {
-      backgroundColor: 'lightgrey',
-    },
   };
 };
 

@@ -47,17 +47,6 @@ export class RefElement extends LitElement {
   _renderHostClass(objOrFunc) {
     // TODO: cache for same static object input
     this.__ensureRenderer(this.__getHostShadowParent());
-    return this.__getFelaClass(this.__getHostShadowParent(), objOrFunc);
-  }
-
-  /**
-   * Renders attribute selector for provided styles for this custom element host.
-   * @param objOrFunc styles object or function returning styles object
-   * @returns {Object} object with attribute names as keys and blank values
-   */
-  _renderHostAttribute(objOrFunc) {
-    // TODO: cache for same static object input
-    this.__ensureRenderer(this.__getHostShadowParent());
     const renderer = this.__getHostShadowParent().__felaRenderer;
 
     const klass = this.__getFelaClass(this.__getHostShadowParent(), objOrFunc);
@@ -72,7 +61,7 @@ export class RefElement extends LitElement {
       root.appendChild(renderer.nodes.RULE);
     }
 
-    return this.__transformClassesToAttributes(renderer, classes);
+    return this.__makeClassesLessSpecific(renderer, classes);
   }
 
   __ensureRenderer(root) {
@@ -100,10 +89,10 @@ export class RefElement extends LitElement {
     }
   }
 
-  __transformClassesToAttributes(renderer, classes) {
-    const attributesStyleNode = this.__getAttributesStyleNode();
+  __makeClassesLessSpecific(renderer, classes) {
+    const hostStyleNode = this.__getHostStyleNode();
     const classesSheet = renderer.nodes.RULE.sheet;
-    return classes.reduce(function __transformClassesToAttributesReducer(acc, klass) {
+    return classes.map(function __mapClassesToLessSpecific(klass) {
       const classRule = this.__findClassRule(classesSheet.cssRules, klass);
       const selector = classRule.selectorText;
 
@@ -117,27 +106,25 @@ export class RefElement extends LitElement {
         remainingClassSelector = selector.slice(0, selector.length - klass.length - 1);
       }
 
-      const attributeName = `class-${klass}`;
+      const hostClassName = `host-${klass}`;
 
-      // full attribute selector for attribute can be
-      // - just an attribute if this is a normal fela style definition (e.g. `[class-a]`)
-      // - an attribute with a nested selector (e.g. `[class-a].nestedClass`)
-      const attributeSelector = `[${attributeName}]${remainingClassSelector}`;
+      // news selector can be
+      // - just a class selector if this is a normal fela style definition (e.g. `.host-a`)
+      // - a selector with a nested selector (e.g. `.host-a.nestedClass`)
+      const newSelector = `.${hostClassName}${remainingClassSelector}`;
 
-      const newRule = classRule.cssText.replace(selector, attributeSelector);
+      const newRule = classRule.cssText.replace(selector, newSelector);
 
       // TODO: cache for performance
-      if (attributesStyleNode.textContent.indexOf(newRule) === -1) {
-        attributesStyleNode.textContent += newRule;
+      if (hostStyleNode.textContent.indexOf(newRule) === -1) {
+        hostStyleNode.textContent += newRule;
       }
 
       // TODO: implement this logic for production
-      // attributesStyleNode.sheet.insertRule(newRule, attributesStyleNode.sheet.cssRules.length);
+      // hostStyleNode.sheet.insertRule(newRule, hostStyleNode.sheet.cssRules.length);
 
-      acc[attributeName] = '';
-
-      return acc;
-    }.bind(this), {});
+      return hostClassName;
+    }.bind(this)).join(' ');
   }
 
   __findClassRule(rules, klass) {
@@ -158,9 +145,9 @@ export class RefElement extends LitElement {
     return classRule;
   }
 
-  __getAttributesStyleNode() {
+  __getHostStyleNode() {
     const root = this.__getHostShadowParent();
-    if (!root.__ATTRIBUTES_STYLE) {
+    if (!root.__HOST_STYLE) {
       const node = document.createElement('style');
       node.type = 'text/css';
       if (root.nodeType === Node.DOCUMENT_NODE) {
@@ -168,9 +155,9 @@ export class RefElement extends LitElement {
       } else {
         root.appendChild(node);
       }
-      root.__ATTRIBUTES_STYLE = node;
+      root.__HOST_STYLE = node;
     }
-    return root.__ATTRIBUTES_STYLE;
+    return root.__HOST_STYLE;
   }
 
   __getHostShadowParent() {
@@ -205,11 +192,7 @@ export class RefElement extends LitElement {
 
   __applyRenderHost(props) {
     if (!this._renderHost) { return; }
-    const extProps = {
-      ...props,
-      cl: this._renderHostClass.bind(this),
-      at: this._renderHostAttribute.bind(this),
-    };
+    const extProps = { ...props, cl: this._renderHostClass.bind(this) };
     const hostConfig = this._renderHost(extProps);
     this.__applyHostConfig(hostConfig);
   }

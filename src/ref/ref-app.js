@@ -26,9 +26,9 @@ export class RefApp extends RefElement {
     this.cols = 8;
   }
 
-  _renderHost({ at }) {
+  _renderHost({ cl }) {
     return {
-      ...at(hostStyle),
+      class: cl(hostStyle),
     };
   }
 

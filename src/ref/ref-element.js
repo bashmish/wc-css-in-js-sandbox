@@ -1,5 +1,6 @@
 import { LitElement } from '@polymer/lit-element';
-import { createRenderer, renderToDOM, combineRules } from '../../vendor/fela.js';
+import { createRenderer, combineRules } from 'fela';
+import { render as renderToDOM } from 'fela-dom';
 import deepMerge from 'deepmerge';
 
 export { html } from 'lit-html/lib/lit-extended.js';

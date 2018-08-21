@@ -7,22 +7,13 @@
     "@polymer/lit-element": "^0.5.2",
     "@webcomponents/webcomponentsjs": "^2.0.4",
     "deepmerge": "^2.1.1",
+    "fela": "bundled-es-modules/fela#6.2.0",
+    "fela-dom": "bundled-es-modules/fela-dom#7.0.9",
     "lit-html": "^0.10.2"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.0.0-rc.1",
-    "fela": "^6.1.9",
-    "fela-dom": "^7.0.9",
     "perf-tester": "git+https://github.com/PolymerLabs/perf-tester.git#a7bba489e144bc3150fbbd976c896900aa2f3653",
-    "rollup": "^0.64.1",
-    "rollup-plugin-commonjs": "^9.1.5",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-replace": "^2.0.0",
-    "rollup-plugin-uglify-es": "0.0.1",
     "url-polyfill": "^1.0.14"
-  },
-  "scripts": {
-    "build-vendor": "npm run build-fela",
-    "build-fela": "rollup -c ./src/vendor/fela/rollup.config.js"
   }
 }

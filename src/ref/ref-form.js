@@ -1,4 +1,6 @@
-import { RefElement, html } from './ref-element.js';
+import { LitElement } from '@polymer/lit-element';
+import { LitElementCssInJsMixin } from './LitElementCssInJsMixin.js';
+import { html } from 'lit-html/lib/lit-extended.js';
 
 const hostStyle = {
   display: 'block',
@@ -8,7 +10,7 @@ const inputStyle = {
   width: '50px',
 };
 
-export class RefForm extends RefElement {
+export class RefForm extends LitElementCssInJsMixin(LitElement) {
   static get properties() {
     return {
       rows: Number,

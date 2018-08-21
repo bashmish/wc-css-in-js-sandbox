@@ -1,4 +1,6 @@
-import { RefElement, html } from './ref-element.js';
+import { LitElement } from '@polymer/lit-element';
+import { LitElementCssInJsMixin } from './LitElementCssInJsMixin.js';
+import { html } from 'lit-html/lib/lit-extended.js';
 import './ref-cell-dark.js';
 import './ref-cell-light.js';
 
@@ -7,7 +9,7 @@ const hostStyle = {
   overflow: 'hidden',
 };
 
-export class RefRow extends RefElement {
+export class RefRow extends LitElementCssInJsMixin(LitElement) {
   static get properties() {
     return {
       rows: Number,

@@ -1,4 +1,6 @@
-import { RefElement, html } from './ref-element.js';
+import { LitElement } from '@polymer/lit-element';
+import { LitElementCssInJsMixin } from './LitElementCssInJsMixin.js';
+import { html } from 'lit-html/lib/lit-extended.js';
 
 const getSizeFromMax = (max) => max <= 20 ? '4vw' : `${80/max}vw`;
 
@@ -37,7 +39,7 @@ const textStyle = (props) => {
   };
 };
 
-export class RefCell extends RefElement {
+export class RefCell extends LitElementCssInJsMixin(LitElement) {
   static get properties() {
     return {
       rows: Number,

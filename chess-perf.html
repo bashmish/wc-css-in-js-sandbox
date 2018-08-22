@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <title>Chess Peformance</title>
+  <script src="./node_modules/@babel/polyfill/dist/polyfill.js"></script>
+  <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="./node_modules/perf-tester/perf-tester.js"></script>
+</head>
+<body>
+  <perf-tester></perf-tester>
+  <script type="module">
+    customElements.whenDefined('perf-tester').then(() => {
+      document.querySelector('perf-tester').tests = [
+        './chess-app.html?name=ref&size=5',
+        './chess-app.html?name=lit&size=5',
+        './chess-app.html?name=ref&size=20',
+        './chess-app.html?name=lit&size=20',
+      ];
+    });
+  </script>
+</body>
+</html>

@@ -2,22 +2,11 @@
 <html lang="en-GB">
 <head>
   <meta charset="utf-8">
-  <title>web-components-playground</title>
-  <script src="./node_modules/@babel/polyfill/dist/polyfill.js"></script>
-  <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-  <script src="./node_modules/perf-tester/perf-tester.js"></script>
+  <title>Web Components Playground</title>
 </head>
 <body>
-  <perf-tester></perf-tester>
-  <script type="module">
-    customElements.whenDefined('perf-tester').then(() => {
-      document.querySelector('perf-tester').tests = [
-        './perf-app.html?name=ref&size=5',
-        './perf-app.html?name=lit&size=5',
-        './perf-app.html?name=ref&size=20',
-        './perf-app.html?name=lit&size=20',
-      ];
-    });
-  </script>
+  <ul>
+    <li><a href="./chess-perf.html">Chess Performance</a></li>
+  </ul>
 </body>
 </html>

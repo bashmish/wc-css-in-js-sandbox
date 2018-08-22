@@ -1,5 +1,5 @@
 import { LitElement } from '@polymer/lit-element';
-import { LitElementCssInJsMixin } from './LitElementCssInJsMixin.js';
+import { LitElementCssInJsMixin } from '../../packages/lit-element-css-in-js/LitElementCssInJsMixin.js';
 import { html } from 'lit-html/lib/lit-extended.js';
 import './ref-cell-dark.js';
 import './ref-cell-light.js';

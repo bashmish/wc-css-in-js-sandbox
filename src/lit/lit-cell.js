@@ -12,24 +12,38 @@ export class LitCell extends LitElement {
   }
 
   _renderStyle() {
-    return `
+    const { rows, cols, row, col } = this;
+    const chess = cols === 8 && rows === 8;
+    const max = Math.max(rows, cols);
+    const size = max <= 20 ? '4vw' : `${80/max}vw`;
+    return /*css*/`
       :host {
+        width: ${size};
+        height: ${size};
+        border-top-width: 1px;
+        border-right-width: ${col === cols - 1 ? '1px' : '0px'};
+        border-bottom-width: ${row === rows - 1 ? '1px' : '0px'};
+        border-left-width: 1px;
+        border-style: solid;
+        border-color: ${chess ? 'black' : 'red'};
         display: inline-block;
         font-size: 18px;
+      }
+
+      .text {
+        line-height: ${size};
+        color: black;
       }
     `;
   }
 
-  _render({ rows, cols, row, col }) {
-    const max = Math.max(rows, cols);
-    const size = max <= 20 ? '4vw' : `${80/max}vw`;
-    this.style.width = size;
-    this.style.height = size;
+  _render() {
+    const { row, col } = this;
     return html`
       <style>
         ${this._renderStyle()}
       </style>
-      ${row+1}:${col+1}
+      <div class="text">${row+1}:${col+1}</div>
     `;
   }
 }

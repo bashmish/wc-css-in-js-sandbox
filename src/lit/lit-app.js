@@ -17,7 +17,8 @@ export class LitApp extends LitElement {
     this.cols = 8;
   }
 
-  _render({ rows, cols }) {
+  _render() {
+    const { rows, cols } = this;
     return html`
       <style>
         :host {

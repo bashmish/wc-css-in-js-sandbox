@@ -10,14 +10,12 @@ export class LitTable extends LitElement {
     };
   }
 
-  _render({ rows, cols }) {
+  _render() {
+    const { rows, cols } = this;
     return html`
       <style>
         :host {
           display: inline-block;
-          border-width: 1px;
-          border-style: solid;
-          border-color: black;
         }
       </style>
       ${Array.from({ length: rows }).map((_, i) => {

@@ -9,7 +9,8 @@ export class LitForm extends LitElement {
     };
   }
 
-  _render({ rows, cols }) {
+  _render() {
+    const { rows, cols } = this;
     return html`
       <style>
         :host {

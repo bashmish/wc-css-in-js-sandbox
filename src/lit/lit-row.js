@@ -12,7 +12,8 @@ export class LitRow extends LitElement {
     };
   }
 
-  _render({ rows, cols, row }) {
+  _render() {
+    const { rows, cols, row } = this;
     return html`
       <style>
         :host {

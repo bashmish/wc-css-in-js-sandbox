@@ -4,11 +4,11 @@
   "description": "My playground for Web Components",
   "author": "Mikhail Bashkirov <bashmish@gmail.com>",
   "dependencies": {
+    "@bundled-es-modules/fela": "^6.2.0",
+    "@bundled-es-modules/fela-dom": "^7.0.9",
     "@polymer/lit-element": "^0.5.2",
     "@webcomponents/webcomponentsjs": "^2.0.4",
     "deepmerge": "^2.1.1",
-    "fela": "bundled-es-modules/fela#6.2.0",
-    "fela-dom": "bundled-es-modules/fela-dom#7.0.9",
     "lit-html": "^0.10.2"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
-import { createRenderer, combineRules } from 'fela';
-import { render as renderToDOM } from 'fela-dom';
+import { createRenderer, combineRules } from '@bundled-es-modules/fela';
+import { render as renderToDOM } from '@bundled-es-modules/fela-dom';
 import deepMerge from 'deepmerge';
 
 export { html } from 'lit-html/lib/lit-extended.js';

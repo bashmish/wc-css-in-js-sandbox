@@ -1,6 +1,6 @@
 import { LitElement } from '@polymer/lit-element';
 import { LitElementCssInJsMixin } from '../../packages/lit-element-css-in-js/LitElementCssInJsMixin.js';
-import { html } from 'lit-html/lib/lit-extended.js';
+import { html } from 'lit-html';
 
 const hostStyle = {
   display: 'block',
@@ -18,22 +18,23 @@ export class RefForm extends LitElementCssInJsMixin(LitElement) {
     };
   }
 
-  _renderHostAttributes({ cl }) {
+  renderHostAttributes() {
     return {
-      class: cl(hostStyle),
+      class: this._renderHostAttributesClass(hostStyle),
     };
   }
 
-  _render({ rows, cols, cl }) {
-    const inputClass = cl(inputStyle);
+  render() {
+    const { rows, cols } = this;
+    const inputClass = this._renderClass(inputStyle);
     return html`
       <label>
         Rows:
-        <input class$="${inputClass}" type="number" value$="${rows}" on-input="${this.__onRowsInput.bind(this)}">
+        <input class="${inputClass}" type="number" value="${rows}" @input="${this.__onRowsInput.bind(this)}">
       </label>
       <label>
         Cols:
-        <input class$="${inputClass}" type="number" value$="${cols}" on-input="${this.__onColsInput.bind(this)}">
+        <input class="${inputClass}" type="number" value="${cols}" @input="${this.__onColsInput.bind(this)}">
       </label>
     `;
   }

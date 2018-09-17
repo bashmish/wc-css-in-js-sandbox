@@ -1,6 +1,6 @@
 import { LitElement } from '@polymer/lit-element';
 import { LitElementCssInJsMixin } from '../../packages/lit-element-css-in-js/LitElementCssInJsMixin.js';
-import { html } from 'lit-html/lib/lit-extended.js';
+import { html } from 'lit-html';
 import './ref-row.js';
 
 const hostStyle = {
@@ -15,16 +15,17 @@ export class RefTable extends LitElementCssInJsMixin(LitElement) {
     };
   }
 
-  _renderHostAttributes({ cl }) {
+  renderHostAttributes() {
     return {
-      class: cl(hostStyle),
+      class: this._renderHostAttributesClass(hostStyle),
     };
   }
 
-  _render({ rows, cols }) {
+  render() {
+    const { rows, cols } = this;
     return html`
       ${Array.from({ length: rows }).map((_, i) => {
-        return html`<ref-row rows="${rows}" cols="${cols}" row="${i}"></ref-row>`;
+        return html`<ref-row .rows="${rows}" .cols="${cols}" .row="${i}"></ref-row>`;
       })}
     `;
   }

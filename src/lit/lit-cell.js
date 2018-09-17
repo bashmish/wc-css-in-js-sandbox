@@ -1,5 +1,5 @@
 import { LitElement } from '@polymer/lit-element';
-import { html } from 'lit-html/lib/lit-extended.js';
+import { html } from 'lit-html';
 
 export class LitCell extends LitElement {
   static get properties() {
@@ -11,7 +11,7 @@ export class LitCell extends LitElement {
     };
   }
 
-  _renderStyle() {
+  renderStyle() {
     const { rows, cols, row, col } = this;
     const chess = cols === 8 && rows === 8;
     const max = Math.max(rows, cols);
@@ -37,11 +37,11 @@ export class LitCell extends LitElement {
     `;
   }
 
-  _render() {
+  render() {
     const { row, col } = this;
     return html`
       <style>
-        ${this._renderStyle()}
+        ${this.renderStyle()}
       </style>
       <div class="text">${row+1}:${col+1}</div>
     `;

@@ -1,9 +1,9 @@
 import { LitCell } from './lit-cell.js';
 
 export class LitCellHighlighted extends LitCell {
-  _renderStyle() {
+  renderStyle() {
     return /*css*/`
-      ${super._renderStyle()}
+      ${super.renderStyle()}
       .text:hover {
         background-color: red;
       }

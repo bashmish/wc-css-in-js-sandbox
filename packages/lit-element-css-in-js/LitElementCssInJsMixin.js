@@ -2,50 +2,47 @@ import { createRenderer, combineRules } from '@bundled-es-modules/fela';
 import { render as renderToDOM } from '@bundled-es-modules/fela-dom';
 import deepMerge from 'deepmerge';
 
-export { html } from 'lit-html/lib/lit-extended.js';
-
 // TODO: disable window.ShadyCSS for all browsers
 
 export const LitElementCssInJsMixin = (superKlass) => {
   return class LitElementCssInJsMixin extends superKlass {
-    constructor() {
-      super();
-      this.__litElementShadowRoot = this.attachShadow({ mode: 'open' });
+    createRenderRoot() {
+      return this.attachShadow({ mode: 'open' });
     }
 
-    _createRoot() {
-      return this.__litElementShadowRoot;
-    }
-
-    _propertiesChanged(props, changedProps, prevProps) {
-      const newProps = { ...props, cl: this._renderClass.bind(this) };
-      this.__currentProps = newProps;
-      super._propertiesChanged(newProps, changedProps, prevProps);
-    }
-
-    _didRender(props) {
-      this.__applyRenderHost(props);
+    updated() {
+      this.__applyRenderHost();
 
       if (this.shadowRoot && this.shadowRoot.__felaRenderer) {
         this.shadowRoot.appendChild(this.shadowRoot.__felaRenderer.nodes.RULE);
       }
     }
 
+    _invalidate() {
+      this.__styleMixins = {};
+      super._invalidate();
+    }
+
     /**
-     * Merges style mixins with their parent class values in the right order and updates the props object.
-     * @param {Object} props
+     * Adds mixins.
      * @param {Object} mixins
      */
-    _mixStyle(props, mixins) {
-      Object.keys(mixins).forEach((key) => {
-        const currentRule = props[key];
-        const overriddenRule = mixins[key];
-        const objOrFuncs = [currentRule, overriddenRule].filter(Boolean);
-        const funcs = this.__transformObjOrFuncsToOnlyFuncs(objOrFuncs);
-        const objects = funcs.map(f => f(props));
-        const mixed = deepMerge.all(objects);
-        props[key] = mixed;
+    _mixStyle(mixins) {
+      Object.keys(mixins).forEach((mixinName) => {
+        this.__styleMixins[mixinName] = this.__styleMixins[mixinName] || [];
+        this.__styleMixins[mixinName] = [mixins[mixinName], ...this.__styleMixins[mixinName]];
       });
+    }
+
+    /**
+     * Merges all mixin styles for the specified name.
+     * @param {string} name
+     */
+    _getStyleMixin(name) {
+      const mixins = this.__styleMixins[name];
+      const funcs = this.__transformObjOrFuncsToOnlyFuncs(mixins);
+      const objects = funcs.map(f => f(this));
+      return deepMerge.all(objects);
     }
 
     /**
@@ -56,7 +53,7 @@ export const LitElementCssInJsMixin = (superKlass) => {
     _renderClass(...objOrFuncs) {
       // TODO: cache for same static object input
       this.__ensureRenderer(this.__getChildShadowParent());
-      return this.__getFelaClass(this.__getChildShadowParent(), this.__currentProps, ...objOrFuncs);
+      return this.__getFelaClass(this.__getChildShadowParent(), ...objOrFuncs);
     }
 
     /**
@@ -69,7 +66,7 @@ export const LitElementCssInJsMixin = (superKlass) => {
       this.__ensureRenderer(this.__getHostShadowParent());
       const renderer = this.__getHostShadowParent().__felaRenderer;
 
-      const klass = this.__getFelaClass(this.__getHostShadowParent(), this.__currentHostProps, ...objOrFuncs);
+      const klass = this.__getFelaClass(this.__getHostShadowParent(), ...objOrFuncs);
       const classes = this.__getClasses(klass);
 
       // hack to make styleNode.sheet available
@@ -202,17 +199,15 @@ export const LitElementCssInJsMixin = (superKlass) => {
       }
     }
 
-    __getFelaClass(root, props, ...objOrFuncs) {
+    __getFelaClass(root, ...objOrFuncs) {
       const funcs = this.__transformObjOrFuncsToOnlyFuncs(objOrFuncs);
       const fullRule = combineRules(...funcs);
-      return root.__felaRenderer.renderRule(fullRule, props);
+      return root.__felaRenderer.renderRule(fullRule, this);
     }
 
-    __applyRenderHost(props) {
-      if (!this._renderHostAttributes) { return; }
-      const extProps = { ...props, cl: this._renderHostAttributesClass.bind(this) };
-      this.__currentHostProps = extProps;
-      const hostConfig = this._renderHostAttributes(extProps);
+    __applyRenderHost() {
+      if (!this.renderHostAttributes) { return; }
+      const hostConfig = this.renderHostAttributes();
       this.__applyHostConfig(hostConfig);
     }
 

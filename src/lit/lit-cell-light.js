@@ -1,9 +1,9 @@
 import { LitCellHighlighted } from './lit-cell-highlighted.js';
 
 export class LitCellLight extends LitCellHighlighted {
-  _renderStyle() {
+  renderStyle() {
     return /*css*/`
-      ${super._renderStyle()}
+      ${super.renderStyle()}
       :host {
         background-color: lightgrey;
       }

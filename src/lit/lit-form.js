@@ -1,5 +1,5 @@
 import { LitElement } from '@polymer/lit-element';
-import { html } from 'lit-html/lib/lit-extended.js';
+import { html } from 'lit-html';
 
 export class LitForm extends LitElement {
   static get properties() {
@@ -9,7 +9,7 @@ export class LitForm extends LitElement {
     };
   }
 
-  _render() {
+  render() {
     const { rows, cols } = this;
     return html`
       <style>
@@ -23,11 +23,11 @@ export class LitForm extends LitElement {
       </style>
       <label>
         Rows:
-        <input type="number" value$="${rows}" on-input="${this.__onRowsInput.bind(this)}">
+        <input type="number" value="${rows}" @input="${this.__onRowsInput.bind(this)}">
       </label>
       <label>
         Cols:
-        <input type="number" value$="${cols}" on-input="${this.__onColsInput.bind(this)}">
+        <input type="number" value="${cols}" @input="${this.__onColsInput.bind(this)}">
       </label>
     `;
   }

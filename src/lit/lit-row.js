@@ -1,5 +1,5 @@
 import { LitElement } from '@polymer/lit-element';
-import { html } from 'lit-html/lib/lit-extended.js';
+import { html } from 'lit-html';
 import './lit-cell-dark.js';
 import './lit-cell-light.js';
 
@@ -12,7 +12,7 @@ export class LitRow extends LitElement {
     };
   }
 
-  _render() {
+  render() {
     const { rows, cols, row } = this;
     return html`
       <style>
@@ -23,9 +23,9 @@ export class LitRow extends LitElement {
       </style>
       ${Array.from({ length: cols }).map((_, col) => {
         if ((row + col) % 2) {
-          return html`<lit-cell-dark rows="${rows}" cols="${cols}" row="${row}" col="${col}"></lit-cell-dark>`;
+          return html`<lit-cell-dark .rows="${rows}" .cols="${cols}" .row="${row}" .col="${col}"></lit-cell-dark>`;
         } else {
-          return html`<lit-cell-light rows="${rows}" cols="${cols}" row="${row}" col="${col}"></lit-cell-light>`;
+          return html`<lit-cell-light .rows="${rows}" .cols="${cols}" .row="${row}" .col="${col}"></lit-cell-light>`;
         }
       })}
     `;

@@ -1,6 +1,6 @@
 import { LitElement } from '@polymer/lit-element';
 import { LitElementCssInJsMixin } from '../../packages/lit-element-css-in-js/LitElementCssInJsMixin.js';
-import { html } from 'lit-html/lib/lit-extended.js';
+import { html } from 'lit-html';
 import './ref-form.js';
 import './ref-table.js';
 
@@ -28,25 +28,26 @@ export class RefApp extends LitElementCssInJsMixin(LitElement) {
     this.cols = 8;
   }
 
-  _renderHostAttributes({ cl }) {
+  renderHostAttributes() {
     return {
-      class: cl(hostStyle),
+      class: this._renderHostAttributesClass(hostStyle),
     };
   }
 
-  _render({ rows, cols, cl }) {
+  render() {
+    const { rows, cols } = this;
     return html`
       <ref-form
-        class$="${cl(formStyle)}"
-        rows="${rows}"
-        cols="${cols}"
-        on-rows-changed="${this.__onRowsChanged.bind(this)}"
-        on-cols-changed="${this.__onColsChanged.bind(this)}"
+        class="${this._renderClass(formStyle)}"
+        .rows="${rows}"
+        .cols="${cols}"
+        @rows-changed="${this.__onRowsChanged.bind(this)}"
+        @cols-changed="${this.__onColsChanged.bind(this)}"
       ></ref-form>
       <div>
         <ref-table
-          rows="${rows}"
-          cols="${cols}"
+          .rows="${rows}"
+          .cols="${cols}"
         ></ref-table>
       </div>
     `;

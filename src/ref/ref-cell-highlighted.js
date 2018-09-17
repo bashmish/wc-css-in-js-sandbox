@@ -7,9 +7,9 @@ const textStyleMixin = {
 };
 
 export class RefCellHighlighted extends RefCell {
-  _render(props) {
-    this._mixStyle(props, { textStyleMixin });
-    return super._render(...arguments);
+  render(...args) {
+    this._mixStyle({ textStyleMixin });
+    return super.render(...args);
   }
 }
 

@@ -1,5 +1,5 @@
 import { LitElement } from '@polymer/lit-element';
-import { html } from 'lit-html/lib/lit-extended.js';
+import { html } from 'lit-html';
 import './lit-row.js';
 
 export class LitTable extends LitElement {
@@ -10,7 +10,7 @@ export class LitTable extends LitElement {
     };
   }
 
-  _render() {
+  render() {
     const { rows, cols } = this;
     return html`
       <style>
@@ -19,7 +19,7 @@ export class LitTable extends LitElement {
         }
       </style>
       ${Array.from({ length: rows }).map((_, i) => {
-        return html`<lit-row rows="${rows}" cols="${cols}" row="${i}"></lit-row>`;
+        return html`<lit-row .rows="${rows}" .cols="${cols}" .row="${i}"></lit-row>`;
       })}
     `;
   }

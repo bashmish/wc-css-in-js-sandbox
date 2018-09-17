@@ -3,17 +3,13 @@
   "version": "0.0.1",
   "description": "My playground for Web Components",
   "author": "Mikhail Bashkirov <bashmish@gmail.com>",
-  "dependencies": {
-    "@bundled-es-modules/fela": "^6.2.0",
-    "@bundled-es-modules/fela-dom": "^7.0.9",
-    "@polymer/lit-element": "^0.5.2",
-    "@webcomponents/webcomponentsjs": "^2.0.4",
-    "deepmerge": "^2.1.1",
-    "lit-html": "^0.10.2"
-  },
   "devDependencies": {
-    "@babel/polyfill": "^7.0.0-rc.1",
-    "perf-tester": "git+https://github.com/PolymerLabs/perf-tester.git#a7bba489e144bc3150fbbd976c896900aa2f3653",
-    "url-polyfill": "^1.0.14"
+    "@babel/polyfill": "^7.0.0",
+    "@polymer/lit-element": "^0.6.0",
+    "@webcomponents/webcomponentsjs": "^2.1.2",
+    "deepmerge": "^2.1.1",
+    "lit-html": "^0.11.3",
+    "perf-tester": "PolymerLabs/perf-tester#a7bba48",
+    "url-polyfill": "^1.1.0"
   }
 }

@@ -1,5 +1,5 @@
 import { LitElement } from '@polymer/lit-element';
-import { html } from 'lit-html/lib/lit-extended.js';
+import { html } from 'lit-html';
 import './lit-form.js';
 import './lit-table.js';
 
@@ -17,7 +17,7 @@ export class LitApp extends LitElement {
     this.cols = 8;
   }
 
-  _render() {
+  render() {
     const { rows, cols } = this;
     return html`
       <style>
@@ -32,15 +32,15 @@ export class LitApp extends LitElement {
         }
       </style>
       <lit-form
-        rows="${rows}"
-        cols="${cols}"
-        on-rows-changed="${this.__onRowsChanged.bind(this)}"
-        on-cols-changed="${this.__onColsChanged.bind(this)}"
+        .rows="${rows}"
+        .cols="${cols}"
+        @rows-changed="${this.__onRowsChanged.bind(this)}"
+        @cols-changed="${this.__onColsChanged.bind(this)}"
       ></lit-form>
       <div>
         <lit-table
-          rows="${rows}"
-          cols="${cols}"
+          .rows="${rows}"
+          .cols="${cols}"
         ></lit-table>
       </div>
     `;

@@ -1,6 +1,6 @@
 import { LitElement } from '@polymer/lit-element';
 import { LitElementCssInJsMixin } from '../../packages/lit-element-css-in-js/LitElementCssInJsMixin.js';
-import { html } from 'lit-html/lib/lit-extended.js';
+import { html } from 'lit-html';
 import './ref-cell-dark.js';
 import './ref-cell-light.js';
 
@@ -18,19 +18,20 @@ export class RefRow extends LitElementCssInJsMixin(LitElement) {
     };
   }
 
-  _renderHostAttributes({ cl }) {
+  renderHostAttributes() {
     return {
-      class: cl(hostStyle),
+      class: this._renderHostAttributesClass(hostStyle),
     };
   }
 
-  _render({ rows, cols, row }) {
+  render() {
+    const { rows, cols, row } = this;
     return html`
       ${Array.from({ length: cols }).map((_, col) => {
         if ((row + col) % 2) {
-          return html`<ref-cell-dark rows="${rows}" cols="${cols}" row="${row}" col="${col}"></ref-cell-dark>`;
+          return html`<ref-cell-dark .rows="${rows}" .cols="${cols}" .row="${row}" .col="${col}"></ref-cell-dark>`;
         } else {
-          return html`<ref-cell-light rows="${rows}" cols="${cols}" row="${row}" col="${col}"></ref-cell-light>`;
+          return html`<ref-cell-light .rows="${rows}" .cols="${cols}" .row="${row}" .col="${col}"></ref-cell-light>`;
         }
       })}
     `;

@@ -3,11 +3,11 @@ import { LitElementCssInJsMixin } from '../../packages/lit-element-css-in-js/Lit
 import { html } from 'lit-html';
 
 const hostStyle = {
-  display: 'block',
+  'display': 'block',
 };
 
 const inputStyle = {
-  width: '50px',
+  'width': '50px',
 };
 
 export class RefForm extends LitElementCssInJsMixin(LitElement) {
@@ -20,13 +20,13 @@ export class RefForm extends LitElementCssInJsMixin(LitElement) {
 
   renderHostAttributes() {
     return {
-      class: this._renderHostAttributesClass(hostStyle),
+      class: this._renderHostClass(hostStyle),
     };
   }
 
   render() {
     const { rows, cols } = this;
-    const inputClass = this._renderClass(inputStyle);
+    const inputClass = this._renderChildClass(inputStyle);
     return html`
       <label>
         Rows:

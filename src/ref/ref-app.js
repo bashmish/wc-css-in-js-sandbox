@@ -5,13 +5,13 @@ import './ref-form.js';
 import './ref-table.js';
 
 const hostStyle = {
-  display: 'block',
+  'display': 'block',
 };
 
 const formStyle = {
-  position: 'fixed',
-  top: 0,
-  right: 0,
+  'position': 'fixed',
+  'top': '0',
+  'right': '0',
 }
 
 export class RefApp extends LitElementCssInJsMixin(LitElement) {
@@ -30,7 +30,7 @@ export class RefApp extends LitElementCssInJsMixin(LitElement) {
 
   renderHostAttributes() {
     return {
-      class: this._renderHostAttributesClass(hostStyle),
+      class: this._renderHostClass(hostStyle),
     };
   }
 
@@ -38,7 +38,7 @@ export class RefApp extends LitElementCssInJsMixin(LitElement) {
     const { rows, cols } = this;
     return html`
       <ref-form
-        class="${this._renderClass(formStyle)}"
+        class="${this._renderChildClass(formStyle)}"
         .rows="${rows}"
         .cols="${cols}"
         @rows-changed="${this.__onRowsChanged.bind(this)}"

@@ -6,6 +6,7 @@
   "devDependencies": {
     "@babel/polyfill": "^7.0.0",
     "@polymer/lit-element": "^0.6.0",
+    "@webcomponents/template": "^1.4.0",
     "@webcomponents/webcomponentsjs": "^2.1.2",
     "deepmerge": "^2.1.1",
     "lit-html": "^0.11.3",

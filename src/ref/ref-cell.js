@@ -9,22 +9,16 @@ const hostStyle = (el) => {
   const max = Math.max(el.cols, el.rows);
   const size = getSizeFromMax(max);
   return {
-    width: size,
-    height: size,
-    borderTopWidth: '1px',
-    borderRightWidth: el.col === el.cols - 1 ? '1px' : '0',
-    borderBottomWidth: el.row === el.rows - 1 ? '1px' : '0',
-    borderLeftWidth: '1px',
-    borderTopStyle: 'solid',
-    borderRightStyle: 'solid',
-    borderBottomStyle: 'solid',
-    borderLeftStyle: 'solid',
-    borderTopColor: chess ? 'black' : 'red',
-    borderRightColor: chess ? 'black' : 'red',
-    borderBottomColor: chess ? 'black' : 'red',
-    borderLeftColor: chess ? 'black' : 'red',
-    display: 'inline-block',
-    fontSize: '18px',
+    'width': size,
+    'height': size,
+    'border-top-width': '1px',
+    'border-right-width': el.col === el.cols - 1 ? '1px' : '0',
+    'border-bottom-width': el.row === el.rows - 1 ? '1px' : '0',
+    'border-left-width': '1px',
+    'border-style': 'solid',
+    'border-color': chess ? 'black' : 'red',
+    'display': 'inline-block',
+    'font-size': '18px',
     ...el._getStyleMixin('hostStyleMixin'),
   };
 };
@@ -33,8 +27,8 @@ const textStyle = (el) => {
   const max = Math.max(el.cols, el.rows);
   const size = getSizeFromMax(max);
   return {
-    lineHeight: size,
-    color: 'black',
+    'line-height': size,
+    'color': 'black',
     ...el._getStyleMixin('textStyleMixin'),
   };
 };
@@ -51,14 +45,14 @@ export class RefCell extends LitElementCssInJsMixin(LitElement) {
 
   renderHostAttributes() {
     return {
-      class: this._renderHostAttributesClass(hostStyle),
+      class: this._renderHostClass(hostStyle),
     };
   }
 
   render() {
     const { row, col } = this;
     return html`
-      <div class="${this._renderClass(textStyle)}">${row+1}:${col+1}</div>
+      <div class="${this._renderChildClass(textStyle)}">${row+1}:${col+1}</div>
     `;
   }
 }

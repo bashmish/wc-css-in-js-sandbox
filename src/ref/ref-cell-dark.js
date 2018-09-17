@@ -1,14 +1,14 @@
 import { RefCellHighlighted } from './ref-cell-highlighted.js';
 
 const hostStyleMixin = {
-  backgroundColor: 'darkgrey',
+  'background-color': 'darkgrey',
 };
 
 const textStyleMixin = {
-  color: 'white',
-  textAlign: 'left',
+  'color': 'white',
+  'text-align': 'left',
   ':hover': {
-    textAlign: 'right',
+    'text-align': 'right',
   },
 };
 

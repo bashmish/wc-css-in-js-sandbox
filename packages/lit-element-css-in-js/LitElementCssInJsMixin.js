@@ -1,21 +1,24 @@
-import { createRenderer, combineRules } from '@bundled-es-modules/fela';
-import { render as renderToDOM } from '@bundled-es-modules/fela-dom';
+import { createRenderer, combineRules } from './css-in-js.js';
 import deepMerge from 'deepmerge';
 
-// TODO: disable window.ShadyCSS for all browsers
+if (!window.ShadowRoot) {
+  window.ShadowRoot = class NoClass {};
+}
 
 export const LitElementCssInJsMixin = (superKlass) => {
   return class LitElementCssInJsMixin extends superKlass {
+    constructor() {
+      super();
+      this._renderChildClass = this._renderChildClass.bind(this);
+      this._renderHostClass = this._renderHostClass.bind(this);
+    }
+
     createRenderRoot() {
-      return this.attachShadow({ mode: 'open' });
+      return this;
     }
 
     updated() {
       this.__applyRenderHost();
-
-      if (this.shadowRoot && this.shadowRoot.__felaRenderer) {
-        this.shadowRoot.appendChild(this.shadowRoot.__felaRenderer.nodes.RULE);
-      }
     }
 
     _invalidate() {
@@ -50,146 +53,49 @@ export const LitElementCssInJsMixin = (superKlass) => {
      * @param {Array<function|Object>} objOrFuncs styles object or function returning styles object
      * @returns {string} space separated class names
      */
-    _renderClass(...objOrFuncs) {
-      // TODO: cache for same static object input
-      this.__ensureRenderer(this.__getChildShadowParent());
-      return this.__getFelaClass(this.__getChildShadowParent(), ...objOrFuncs);
+    _renderChildClass(...objOrFuncs) {
+      const funcs = this.__transformObjOrFuncsToOnlyFuncs(objOrFuncs);
+      const fullRule = combineRules(...funcs);
+      return this.__getStyleRenderer('child', 'Child').renderRule(fullRule, this);
     }
 
     /**
-     * Renders class for provided styles for this custom element host.
+     * Renders class selector for provided styles for this custom element host.
      * @param {Array<function|Object>} objOrFuncs styles object or function returning styles object
      * @returns {string} space separated class names
      */
-    _renderHostAttributesClass(...objOrFuncs) {
-      // TODO: cache for same static object input
-      this.__ensureRenderer(this.__getHostShadowParent());
-      const renderer = this.__getHostShadowParent().__felaRenderer;
-
-      const klass = this.__getFelaClass(this.__getHostShadowParent(), ...objOrFuncs);
-      const classes = this.__getClasses(klass);
-
-      // hack to make styleNode.sheet available
-      // why? because lit-html removes manually added style nodes in between renders
-      // and style node detached from DOM lacks the `sheet` property
-      // TODO: improve rendering to not loose once rendered style nodes
-      if (!renderer.nodes.RULE.sheet) {
-        const root = this.__getHostShadowParent();
-        root.appendChild(renderer.nodes.RULE);
-      }
-
-      return this.__makeClassesLessSpecific(renderer, classes);
+    _renderHostClass(...objOrFuncs) {
+      const funcs = this.__transformObjOrFuncsToOnlyFuncs(objOrFuncs);
+      const fullRule = combineRules(...funcs);
+      return this.__getStyleRenderer('host', 'Host').renderRule(fullRule, this);
     }
 
-    __ensureRenderer(root) {
-      if (root.__felaReady) { return; }
-
-      const felaRenderer = createRenderer();
-
-      if (window.ShadyCSS) {
-        renderToDOM(felaRenderer);
-      } else {
-        const tempQuerySelectorAll = document.querySelectorAll;
-        document.querySelectorAll = () => [];
-        renderToDOM(felaRenderer);
-        document.querySelectorAll = tempQuerySelectorAll;
+    __getStyleRenderer(type, typeCapital) {
+      if (this[`__cached${typeCapital}StyleRenderer`]) {
+        return this[`__cached${typeCapital}StyleRenderer`];
       }
 
-      felaRenderer.renderRule(() => ({ display: 'block' }));
+      const root = this[`__get${typeCapital}ShadowParentRoot`]();
 
-      root.__felaRenderer = felaRenderer;
-      root.__felaReady = true;
-      felaRenderer.__initialRuleSheet = felaRenderer.nodes.RULE.sheet;
-
-      if (root.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
-        root.appendChild(felaRenderer.nodes.RULE);
+      if (root[`__cached${typeCapital}StylesRenderer`]) {
+        this[`__cached${typeCapital}StyleRenderer`] = root[`__cached${typeCapital}StylesRenderer`];
+        return root[`__cached${typeCapital}StylesRenderer`];
       }
+
+      const styleRenderer = createRenderer(root, type);
+
+      this[`__cached${typeCapital}StyleRenderer`] = styleRenderer;
+      root[`__cached${typeCapital}StylesRenderer`] = styleRenderer;
+
+      this.updateComplete.then(() => {
+        styleRenderer.addToDOM();
+      });
+
+      return styleRenderer;
     }
 
-    __makeClassesLessSpecific(renderer, classes) {
-      const hostStyleNode = this.__getHostStyleNode();
-      const classesSheet = renderer.nodes.RULE.sheet;
-      return classes.map(function __mapClassesToLessSpecific(klass) {
-        const classRule = this.__findClassRule(classesSheet.cssRules, klass);
-        const selector = classRule.selectorText;
-
-        // this selector may be more specific due to nested selectors support by fela (e.g. `.a.nestedClass`)
-        // so we are calculating the remaining part (e.g. `.nestedClass`)
-        // and also take into account different possible order (e.g. `.nestedClass.a`)
-        let remainingClassSelector;
-        if (selector.startsWith(`.${klass}`)) {
-          remainingClassSelector = selector.slice(klass.length + 1);
-        } else {
-          remainingClassSelector = selector.slice(0, selector.length - klass.length - 1);
-        }
-
-        const hostClassName = `host-${klass}`;
-
-        // news selector can be
-        // - just a class selector if this is a normal fela style definition (e.g. `.host-a`)
-        // - a selector with a nested selector (e.g. `.host-a.nestedClass`)
-        const newSelector = `.${hostClassName}${remainingClassSelector}`;
-
-        const newRule = classRule.cssText.replace(selector, newSelector);
-
-        // TODO: cache for performance
-        if (hostStyleNode.textContent.indexOf(newRule) === -1) {
-          hostStyleNode.textContent += newRule;
-        }
-
-        // TODO: implement this logic for production
-        // hostStyleNode.sheet.insertRule(newRule, hostStyleNode.sheet.cssRules.length);
-
-        return hostClassName;
-      }.bind(this)).join(' ');
-    }
-
-    __findClassRule(rules, klass) {
-      const classSelector = `.${klass}`;
-      let classRule;
-      for (const rule of rules) {
-        // this algorithm is based on the assumption that all fela classes are ordered
-        // so for short classes it does not matter whether there are similar ones with a few more chars
-        // meaning that if we are looking for class `.a` then
-        // even if there is `.aa` class somewhere down the list we will still match `.a` before it
-        // TODO: improve performance of this lookup
-        const selector = rule.selectorText;
-        if (selector.startsWith(classSelector) || selector.endsWith(classSelector)) {
-          classRule = rule;
-          break;
-        }
-      }
-      return classRule;
-    }
-
-    __getHostStyleNode() {
-      const root = this.__getHostShadowParent();
-      if (!root.__HOST_STYLE) {
-        const node = document.createElement('style');
-        node.type = 'text/css';
-        if (root.nodeType === Node.DOCUMENT_NODE) {
-          document.head.appendChild(node);
-        } else {
-          root.appendChild(node);
-        }
-        root.__HOST_STYLE = node;
-      }
-      return root.__HOST_STYLE;
-    }
-
-    __getHostShadowParent() {
-      if (window.ShadyCSS) {
-        return document;
-      }
-      if (this.shadowRoot) {
-        return this.shadowRoot.host.getRootNode();
-      } else {
-        return this.getRootNode();
-      }
-    }
-
-    __getChildShadowParent() {
-      if (window.ShadyCSS) {
+    __getChildShadowParentRoot() {
+      if (!this.attachShadow) {
         return document;
       }
       if (this.shadowRoot) {
@@ -199,10 +105,15 @@ export const LitElementCssInJsMixin = (superKlass) => {
       }
     }
 
-    __getFelaClass(root, ...objOrFuncs) {
-      const funcs = this.__transformObjOrFuncsToOnlyFuncs(objOrFuncs);
-      const fullRule = combineRules(...funcs);
-      return root.__felaRenderer.renderRule(fullRule, this);
+    __getHostShadowParentRoot() {
+      if (!this.attachShadow) {
+        return document;
+      }
+      if (this.shadowRoot) {
+        return this.shadowRoot.host.getRootNode();
+      } else {
+        return this.getRootNode();
+      }
     }
 
     __applyRenderHost() {
@@ -212,12 +123,8 @@ export const LitElementCssInJsMixin = (superKlass) => {
     }
 
     __applyHostConfig(hostConfig) {
-      const hostConfigWithoutClass = Object.keys(hostConfig).reduce((acc, key) => {
-        if (key !== 'class') {
-          acc[key] = hostConfig[key];
-        }
-        return acc;
-      }, {});
+      const hostConfigWithoutClass = { ...hostConfig };
+      delete hostConfigWithoutClass.class;
 
       // class attribute has special handling
       this.__applyHostConfigClass(hostConfig.class || '');

@@ -5,8 +5,8 @@ import './ref-cell-dark.js';
 import './ref-cell-light.js';
 
 const hostStyle = {
-  display: 'block',
-  overflow: 'hidden',
+  'display': 'block',
+  'overflow': 'hidden',
 };
 
 export class RefRow extends LitElementCssInJsMixin(LitElement) {
@@ -20,7 +20,7 @@ export class RefRow extends LitElementCssInJsMixin(LitElement) {
 
   renderHostAttributes() {
     return {
-      class: this._renderHostAttributesClass(hostStyle),
+      class: this._renderHostClass(hostStyle),
     };
   }
 

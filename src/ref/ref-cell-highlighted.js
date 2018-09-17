@@ -2,7 +2,7 @@ import { RefCell } from './ref-cell.js';
 
 const textStyleMixin = {
   ':hover': {
-    backgroundColor: 'red',
+    'background-color': 'red',
   },
 };
 

@@ -4,7 +4,7 @@ import { html } from 'lit-html';
 import './ref-row.js';
 
 const hostStyle = {
-  display: 'inline-block',
+  'display': 'inline-block',
 };
 
 export class RefTable extends LitElementCssInJsMixin(LitElement) {
@@ -17,7 +17,7 @@ export class RefTable extends LitElementCssInJsMixin(LitElement) {
 
   renderHostAttributes() {
     return {
-      class: this._renderHostAttributesClass(hostStyle),
+      class: this._renderHostClass(hostStyle),
     };
   }
 

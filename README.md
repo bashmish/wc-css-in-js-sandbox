@@ -1,6 +1,6 @@
-# web-components-playground
+# wc-css-in-js-sandbox
 
-This is my playground to experiment with Web Components and related technologies in search for the best way to develop a library of reusable, framework-agnostic, high-performant, accessible and maintainable components.
+This is my sandbox to experiment with Web Components and CSS-in-JS.
 
 To run the demo server:
 

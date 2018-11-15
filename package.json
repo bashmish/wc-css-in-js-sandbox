@@ -1,7 +1,7 @@
 {
-  "name": "web-components-playground",
+  "name": "wc-css-in-js-sandbox",
   "version": "0.0.1",
-  "description": "My playground for Web Components",
+  "description": "Web Components and CSS-in-JS sandbox",
   "author": "Mikhail Bashkirov <bashmish@gmail.com>",
   "devDependencies": {
     "@babel/polyfill": "^7.0.0",
